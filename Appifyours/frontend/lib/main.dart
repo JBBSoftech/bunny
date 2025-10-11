@@ -92,41 +92,41 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
+                    height: 160,
+                    child: Stack(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: DropdownButtonFormField<String>(
-                            value: 'All',
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 4),
-                            ),
-                            items: const [
-                              DropdownMenuItem<String>(value: 'All', child: Text('All Categories')),
-                              DropdownMenuItem<String>(value: 'Liter', child: Text('Liter')),
-                              DropdownMenuItem<String>(value: 'KG', child: Text('KG')),
-                              DropdownMenuItem<String>(value: 'Piece', child: Text('Piece')),
-                              DropdownMenuItem<String>(value: 'Pack', child: Text('Pack')),
+                        Container(color: Colors.grey[300]),
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Welcome to Our Store!',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 4.0,
+                                      color: Colors.black,
+                                      offset: Offset(1.0, 1.0),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: Text('Shop Now', style: const TextStyle(fontSize: 12)),
+                              ),
                             ],
-                            onChanged: (value) {},
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Search products',
-                            prefixIcon: const Icon(Icons.search),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
                           ),
                         ),
                       ],
