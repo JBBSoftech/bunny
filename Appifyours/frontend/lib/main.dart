@@ -94,85 +94,39 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Categories',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 12),
                         Container(
-                          height: 120,
-                          child: Stack(
-                            children: [
-                              ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 0,
-                                itemBuilder: (context, index) => Container(
-                                  width: 80,
-                                  margin: const EdgeInsets.only(right: 12, left: 6, top: 6, bottom: 6),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: 60,
-                                        height: 60,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xffffff),
-                                          borderRadius: BorderRadius.circular(8),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.1),
-                                              blurRadius: 4,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: const Icon(Icons.image, size: 30, color: Colors.grey),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      const Text(
-                                        'Category',
-                                        style: TextStyle(fontSize: 10),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      Column(
-                                        children: [
-                  Container(
-                    height: 160,
-                    child: Stack(
-                      children: [
-                        Container(color: Colors.grey[300]),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Welcome to Our Store!',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(
-                                      blurRadius: 4.0,
-                                      color: Colors.black,
-                                      offset: Offset(1.0, 1.0),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                child: Text('Shop Now', style: const TextStyle(fontSize: 12)),
-                              ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: DropdownButtonFormField<String>(
+                            value: 'All',
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(vertical: 4),
+                            ),
+                            items: const [
+                              DropdownMenuItem<String>(value: 'All', child: Text('All Categories')),
+                              DropdownMenuItem<String>(value: 'Liter', child: Text('Liter')),
+                              DropdownMenuItem<String>(value: 'KG', child: Text('KG')),
+                              DropdownMenuItem<String>(value: 'Piece', child: Text('Piece')),
+                              DropdownMenuItem<String>(value: 'Pack', child: Text('Pack')),
                             ],
+                            onChanged: (value) {},
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search products',
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade100,
                           ),
                         ),
                       ],
