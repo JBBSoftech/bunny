@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,7 +31,7 @@ jobs:
         with:
           flutter-version: '3.24.3'
           channel: 'stable'
-          cache: true
+          cache: false
           cache-key: "flutter-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}"
 
       - name: Verify Flutter installation
@@ -39,68 +40,108 @@ jobs:
       - name: Accept Android licenses
         run: yes | flutter doctor --android-licenses || true
 
-      - name: Navigate to frontend directory
-        run: cd Appifyours/frontend && pwd && ls -la
+      - name: Check project structure and navigate
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Listing root directory:"
+          ls -la
+          
+          if [ -d "frontend" ]; then
+            echo "? Found frontend directory at root level"
+            if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
+          elif [ -d "Appifyours/frontend" ]; then
+            echo "??  Found old structure - frontend is in Appifyours/frontend"
+            cd Appifyours/frontend
+          else
+            echo "? No frontend directory found!"
+            ls -la
+            exit 1
+          fi
+          
+          echo "Flutter project directory:"
+          pwd
+          ls -la
 
+      - name: Clean Flutter project completely
+        run: |
+          if [ -d "frontend" ]; then
+            if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
+          elif [ -d "Appifyours/frontend" ]; then
+            cd Appifyours/frontend
+          fi
+          echo "Cleaning Flutter project..."
+          flutter clean || echo "Flutter clean failed, continuing..."
+          
+          echo "Removing all Flutter artifacts..."
+          rm -f pubspec.lock
+          rm -f .packages
+          rm -rf .dart_tool/
+          rm -rf build/
+          rm -rf .flutter-plugins
+          rm -rf .flutter-plugins-dependencies
+          
+          echo "Cleanup complete. Current directory contents:"
+          ls -la
       - name: Install dependencies
         run: |
-          cd Appifyours/frontend
+          if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
           flutter pub get
 
       - name: Analyze code (optional)
         run: |
-          cd Appifyours/frontend
+          if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
           flutter analyze || true
         continue-on-error: true
 
       - name: Make gradlew executable
-        run: chmod +x Appifyours/frontend/android/gradlew
+        run: if [ -f "frontend/android/gradlew" ]; then chmod +x frontend/android/gradlew; elif [ -f "Appifyours/frontend/android/gradlew" ]; then chmod +x Appifyours/frontend/android/gradlew; fi
 
       - name: Run tests (optional)
         run: |
-          cd Appifyours/frontend
+          if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
           flutter test --coverage || echo "Tests completed with warnings"
         continue-on-error: true
 
       - name: Build APK (debug)
         run: |
-          cd Appifyours/frontend
+          if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
           flutter build apk --debug --no-shrink
 
       - name: Build APK (release)
         run: |
-          cd Appifyours/frontend
+          if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
           flutter build apk --release
 
       - name: Build AAB (release)
         run: |
-          cd Appifyours/frontend
+          if [ -d "frontend" ]; then cd frontend; elif [ -d "Appifyours/frontend" ]; then cd Appifyours/frontend; fi
           flutter build appbundle --release
 
       - name: List build outputs
         run: |
           echo "Debug APK:"
-          ls -lh Appifyours/frontend/build/app/outputs/flutter-apk/ || true
+          ls -lh frontend/build/app/outputs/flutter-apk/ || true
           echo "Release outputs:"
-          ls -lh Appifyours/frontend/build/app/outputs/bundle/release/ || true
+          ls -lh frontend/build/app/outputs/bundle/release/ || true
 
       - name: Upload APK (debug)
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: Appifyours/frontend/build/app/outputs/flutter-apk/app-debug.apk
+          path: frontend/build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: warn
 
       - name: Upload APK (release)
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: Appifyours/frontend/build/app/outputs/flutter-apk/app-release.apk
+          path: frontend/build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: warn
 
       - name: Upload AAB (release)
         uses: actions/upload-artifact@v4
         with:
           name: release-aab
-          path: Appifyours/frontend/build/app/outputs/bundle/release/app-release.aab
+          path: frontend/build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: warn
